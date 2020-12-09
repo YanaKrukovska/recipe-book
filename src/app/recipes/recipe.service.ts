@@ -1,13 +1,28 @@
 import {Recipe} from './recipe.model';
-import {EventEmitter} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
+import {Ingredient} from '../shared/ingredient.model';
+import {ShoppingListService} from '../shopping-list/shopping-list.service';
 
+@Injectable()
 export class RecipeService {
   recipeSelected = new EventEmitter<Recipe>();
   private recipes: Recipe[] = [
-    new Recipe('Test Recipe', 'This is a test recipe', 'https://upload.wikimedia.org/wikipedia/commons/1/15/Recipe_logo.jpeg'),
-    new Recipe('Test 2 Recipe', 'This is 2nd test recipe', 'https://upload.wikimedia.org/wikipedia/commons/1/15/Recipe_logo.jpeg')
+    new Recipe('Butterbrot', 'Food of Gods',
+      'https://ladyeve.ru/wp-content/uploads/2012/02/kolbasnyiy-buterbrod.jpg',
+      [new Ingredient('butter', 100), new Ingredient('bread', 1), new Ingredient('saussage', 1)]),
+    new Recipe('Butterbrot with salo', 'Less godlike but still the foot of Gods',
+      'https://znaj.ua/crops/a580aa/620x0/1/0/2019/02/19/wKf2FFhkJWVsKz8V8X25Wdd0u3ivyVWPRtcF9ziP.jpeg',
+      [new Ingredient('salo', 50), new Ingredient('bread', 1), new Ingredient('garlic', 1)])
   ];
-  getRecipes(){
+
+  constructor(private shoppingListService: ShoppingListService) {
+  }
+
+  getRecipes() {
     return this.recipes.slice();
+  }
+
+  addIngredientsToShoppingList(ingredients: Ingredient[]) {
+    this.shoppingListService.addIngredients(ingredients);
   }
 }
