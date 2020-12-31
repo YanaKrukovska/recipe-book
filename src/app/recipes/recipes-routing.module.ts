@@ -7,11 +7,10 @@ import {RecipeEditComponent} from './recipe-edit/recipe-edit.component';
 import {RecipeDetailComponent} from './recipe-detail/recipe-detail.component';
 import {RecipesResolverService} from './recipes-resolver.service';
 import {CommonModule} from '@angular/common';
-import {ReactiveFormsModule} from '@angular/forms';
 
 const appRoutes: Routes = [
   {
-    path: 'recipes',
+    path: '',
     component: RecipesComponent,
     canActivate: [AuthGuard],
     children: [
@@ -32,7 +31,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(appRoutes), CommonModule, ReactiveFormsModule],
+  imports: [RouterModule.forChild(appRoutes), CommonModule],
   exports: [RouterModule]
 })
 export class RecipesRoutingModule {
