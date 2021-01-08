@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Actions, ofType, Effect } from '@ngrx/effects';
-import { switchMap, catchError, map, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {Actions, ofType, Effect} from '@ngrx/effects';
+import {switchMap, catchError, map, tap} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../environments/environment';
 
 import * as AuthActions from './auth.actions';
-import { User } from '../user.model';
-import { AuthService } from '../auth.service';
+import {User} from '../user.model';
+import {AuthService} from '../auth.service';
 
 export interface AuthResponseData {
   kind: string;
@@ -33,7 +33,8 @@ const handleAuthentication = (
     email: email,
     userId: userId,
     token: token,
-    expirationDate: expirationDate
+    expirationDate: expirationDate,
+    redirect: true
   });
 };
 
@@ -124,11 +125,13 @@ export class AuthEffects {
     })
   );
 
-  @Effect({ dispatch: false })
+  @Effect({dispatch: false})
   authRedirect = this.actions$.pipe(
     ofType(AuthActions.AUTHENTICATE_SUCCESS),
-    tap(() => {
-      this.router.navigate(['/']);
+    tap((authSuccessAction: AuthActions.AuthenticateSuccess) => {
+      if (authSuccessAction) {
+        this.router.navigate(['/']);
+      }
     })
   );
 
@@ -143,7 +146,7 @@ export class AuthEffects {
         _tokenExpirationDate: string;
       } = JSON.parse(localStorage.getItem('userData'));
       if (!userData) {
-        return { type: 'DUMMY' };
+        return {type: 'DUMMY'};
       }
 
       const loadedUser = new User(
@@ -162,14 +165,15 @@ export class AuthEffects {
           email: loadedUser.email,
           userId: loadedUser.id,
           token: loadedUser.token,
-          expirationDate: new Date(userData._tokenExpirationDate)
+          expirationDate: new Date(userData._tokenExpirationDate),
+          redirect: false
         });
       }
-      return { type: 'DUMMY' };
+      return {type: 'DUMMY'};
     })
   );
 
-  @Effect({ dispatch: false })
+  @Effect({dispatch: false})
   authLogout = this.actions$.pipe(
     ofType(AuthActions.LOGOUT),
     tap(() => {
@@ -184,5 +188,6 @@ export class AuthEffects {
     private http: HttpClient,
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) {
+  }
 }
