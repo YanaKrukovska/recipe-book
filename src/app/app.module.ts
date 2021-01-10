@@ -15,21 +15,25 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
 import {environment} from '../environments/environment';
 import {StoreRouterConnectingModule} from '@ngrx/router-store';
 import {RecipeEffects} from './recipes/store/recipe.effects';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AnimationsComponent} from './animations/animations.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HeaderComponent],
+    HeaderComponent,
+    AnimationsComponent],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserAnimationsModule,
+    BrowserModule.withServerTransition({appId: 'serverApp'}),
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
     EffectsModule.forRoot([AuthEffects, RecipeEffects]),
-    SharedModule,
     CoreModule,
     StoreDevtoolsModule.instrument({logOnly: environment.production}),
-    StoreRouterConnectingModule.forRoot()
+    StoreRouterConnectingModule.forRoot(),
+    SharedModule,
   ],
   /* providers: [
      LoggingService
